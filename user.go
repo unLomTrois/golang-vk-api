@@ -3,6 +3,7 @@ package vkapi
 import (
 	"encoding/json"
 	"net/url"
+	"strings"
 )
 
 // last seen device
@@ -72,11 +73,20 @@ type OnlineInfo struct {
 	LastSeen int64 `json:"last_seen"`
 }
 
-func (client *VKClient) UsersGet(users []int) ([]*User, error) {
+func (client *VKClient) UsersGet(users []int, fields []string) ([]*User, error) {
 	idsString := ArrayToStr(users)
+
+	var fieldsString string
+
+	if fields == nil {
+		fieldsString = userFields
+	} else {
+		fieldsString = strings.Join(fields, ",")
+	}
+
 	v := url.Values{}
 	v.Add("user_ids", idsString)
-	v.Add("fields", userFields)
+	v.Add("fields", fieldsString)
 
 	resp, err := client.MakeRequest("users.get", v)
 	if err != nil {
