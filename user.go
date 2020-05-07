@@ -73,8 +73,9 @@ type OnlineInfo struct {
 	LastSeen int64 `json:"last_seen"`
 }
 
-func (client *VKClient) UsersGet(users []int, fields []string) ([]*User, error) {
-	idsString := ArrayToStr(users)
+// UsersGet takes userIds(ids or screen_name)
+func (client *VKClient) UsersGet(userIds []string, fields []string) ([]*User, error) {
+	idsString := strings.Join(userIds, ",")
 
 	var fieldsString string
 
